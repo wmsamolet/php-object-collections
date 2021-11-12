@@ -5,7 +5,10 @@
     "keywords": [
         "php",
         "object",
-        "collections"
+        "collections",
+        "iterators",
+        "typed",
+        "array"
     ],
     "license": "MIT",
     "authors": [

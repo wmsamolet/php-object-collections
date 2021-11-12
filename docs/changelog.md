@@ -1,4 +1,9 @@
-# Changelog ([Semantic Versioning](https://semver.org/)):
+# Changelog:
+[Semantic Versioning](https://semver.org/)
+
+### v1.0.4
+- Improved documentation
+- Add keywords to composer.json
 
 ### v1.0.3
 - Improved documentation
