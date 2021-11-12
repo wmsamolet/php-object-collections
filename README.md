@@ -44,7 +44,6 @@ to the requirement section of your `composer.json` file.
 
 ## Basic usage
 
-### TestEntity
 ```php
 <?php
 
