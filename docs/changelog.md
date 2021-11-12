@@ -1,6 +1,9 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.1.1
+- Improved documentation
+
 ### v1.1.0
 - Improved documentation
 - Added method ->batchCount($size)

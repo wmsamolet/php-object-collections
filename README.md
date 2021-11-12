@@ -15,7 +15,7 @@ Strongly typed collections for objects and more
 as data (useful for storing ORM Iterators, for example 
 [https://www.doctrine-project.org/projects/doctrine-orm/en/2.10/tutorials/pagination.html](https://www.doctrine-project.org/projects/doctrine-orm/en/2.10/tutorials/pagination.html))
 - Ability to work with a collection **as an array**
-- Possibility of pagination (in batches) using **->batch($size)**
+- Possibility of pagination (in batches) using **->batch(...)**, **->slice(...)**, **->page(...)**
 
 ## Documentation
 
