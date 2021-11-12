@@ -409,6 +409,158 @@ final class ExampleIndexedCollectionTest extends TestCase
         $this->assertCount($collectionEntityListTotalCount, $generatedEntityList);
     }
 
+    public function testBatchCallback(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $id = self::COLLECTION_SIZE + 1;
+        $newEntity = (new TestEntity())
+            ->setId($id)
+            ->setName('Name ' . $id)
+            ->setTitle('Title ' . $id);
+
+        $collection = new TestIndexedCollection($generatedEntityList);
+        $collection->setBatchCallback(
+            function ($size, callable $defaultCallback, TestIndexedCollection $that) use ($newEntity) {
+                $that->add($newEntity);
+
+                return $defaultCallback($size);
+            }
+        );
+
+        $generatedEntityList[] = $newEntity;
+
+        $batchSize = 2;
+        $collectionEntityListTotalCount = 0;
+
+        foreach ($collection->batch($batchSize) as $collectionEntityList) {
+            $collectionEntityListCount = count($collectionEntityList);
+
+            $this->assertLessThanOrEqual($batchSize, $collectionEntityListCount);
+
+            $collectionEntityListTotalCount += $collectionEntityListCount;
+        }
+
+        $this->assertCount($collectionEntityListTotalCount, $generatedEntityList);
+    }
+
+    public function testBatchCount(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $collection = new TestIndexedCollection($generatedEntityList);
+
+        $batchSize = 2;
+        $batchCount = (int)ceil(count($generatedEntityList) / $batchSize);
+
+        $collectionBatchCount = $collection->batchCount($batchSize);
+
+        $this->assertSame($collectionBatchCount, $batchCount);
+    }
+
+    public function testSlice(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $sliceOffset = 1;
+        $sliceLength = count($generatedEntityList) - 2;
+
+        $generatedEntitySliceList = array_slice($generatedEntityList, $sliceOffset, $sliceLength);
+
+        $this->assertLessThanOrEqual($sliceLength, count($generatedEntitySliceList));
+
+        $collection = new TestIndexedCollection($generatedEntityList);
+        $collectionEntitySliceList = $collection->slice($sliceOffset, $sliceLength);
+
+        $this->assertLessThanOrEqual($sliceLength, count($collectionEntitySliceList));
+
+        foreach ($generatedEntitySliceList as $i => $generatedEntitySlice) {
+            $this->assertNotEmpty($collectionEntitySliceList[$i]);
+            $this->assertSame($generatedEntitySlice->getId(), $collectionEntitySliceList[$i]->getId());
+        }
+    }
+
+    public function testPage(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $collection = new TestIndexedCollection($generatedEntityList);
+
+        $pageLimit = 2;
+        $pageCount = (int)ceil(count($generatedEntityList) / $pageLimit);
+
+        $totalCollectionItemsCount = 0;
+
+        for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
+            $pageItems = $collection->page($pageNumber, $pageLimit);
+
+            $this->assertLessThanOrEqual($pageLimit, count($pageItems));
+
+            $totalCollectionItemsCount += count($pageItems);
+        }
+
+        $this->assertCount($totalCollectionItemsCount, $generatedEntityList);
+    }
+
+    public function testPageCallback(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $id = self::COLLECTION_SIZE + 1;
+        $newEntity = (new TestEntity())
+            ->setId($id)
+            ->setName('Name ' . $id)
+            ->setTitle('Title ' . $id);
+
+        $collection = new TestIndexedCollection($generatedEntityList);
+        $collection->setPageCallback(
+            function (
+                $number,
+                $limit,
+                $preserveKeys,
+                callable $defaultCallback,
+                TestIndexedCollection $that
+            ) use (
+                $newEntity
+            ) {
+                $that->add($newEntity);
+
+                return $defaultCallback($number, $limit, $preserveKeys);
+            }
+        );
+
+        $generatedEntityList[] = $newEntity;
+
+        $pageLimit = 2;
+        $pageCount = (int)ceil(count($generatedEntityList) / $pageLimit);
+
+        $totalCollectionItemsCount = 0;
+
+        for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
+            $pageItems = $collection->page($pageNumber, $pageLimit);
+
+            $this->assertLessThanOrEqual($pageLimit, count($pageItems));
+
+            $totalCollectionItemsCount += count($pageItems);
+        }
+
+        $this->assertCount($totalCollectionItemsCount, $generatedEntityList);
+    }
+
+    public function testPageCount(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $collection = new TestIndexedCollection($generatedEntityList);
+
+        $pageLimit = 2;
+        $pageCount = (int)ceil(count($generatedEntityList) / $pageLimit);
+
+        $collectionPageCount = $collection->pageCount($pageLimit);
+
+        $this->assertSame($collectionPageCount, $pageCount);
+    }
+
     public function testAddOtherEntityException(): void
     {
         $this->expectException(CollectionValidateException::class);

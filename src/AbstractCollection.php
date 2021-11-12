@@ -17,6 +17,12 @@ abstract class AbstractCollection implements CollectionInterface
     private $iterator;
 
     /** @var null|callable */
+    private $batchCallback;
+
+    /** @var null|callable */
+    private $pageCallback;
+
+    /** @var null|callable */
     private $countCallback;
 
     public function __construct(array $items = [])
@@ -73,6 +79,42 @@ abstract class AbstractCollection implements CollectionInterface
     public function getCountCallback(): ?callable
     {
         return $this->countCallback;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setBatchCallback(?callable $batchCallback)
+    {
+        $this->batchCallback = $batchCallback;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getBatchCallback(): ?callable
+    {
+        return $this->batchCallback;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function setPageCallback(?callable $callback)
+    {
+        $this->pageCallback = $callback;
+
+        return $this;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getPageCallback(): ?callable
+    {
+        return $this->pageCallback;
     }
 
     /**
@@ -309,23 +351,34 @@ abstract class AbstractCollection implements CollectionInterface
      */
     public function batch(int $size): iterable
     {
-        $i = 0;
-        $batch = [];
+        $defaultCallback = function ($size) {
+            $i = 0;
+            $batch = [];
 
-        $this->iterator->rewind();
+            $this->iterator->rewind();
 
-        /** @var int|string $key */
-        foreach ($this as $key => $value) {
-            $batch[$key] = $value;
+            /** @var int|string $key */
+            foreach ($this as $key => $value) {
+                $batch[$key] = $value;
 
-            if (++$i % $size === 0) {
-                yield $batch;
+                if (++$i % $size === 0) {
+                    yield $batch;
 
-                $batch = [];
+                    $batch = [];
+                }
             }
+
+            yield $batch;
+        };
+
+        if ($this->batchCallback) {
+            $callback = $this->batchCallback;
+        } else {
+            $callback = $defaultCallback;
+            $defaultCallback = null;
         }
 
-        yield $batch;
+        return $callback($size, $defaultCallback, $this);
     }
 
     /**
@@ -368,11 +421,22 @@ abstract class AbstractCollection implements CollectionInterface
      */
     public function page(int $number, int $limit, bool $preserveKeys = false): ?array
     {
-        $number = $number > 0 ? $number : 1;
+        $defaultCallback = function ($number, $limit, $preserveKeys) {
+            $number = $number > 0 ? $number : 1;
 
-        $offset = ($number - 1) * $limit;
+            $offset = ($number - 1) * $limit;
 
-        return $this->slice($offset, $limit, $preserveKeys);
+            return $this->slice($offset, $limit, $preserveKeys);
+        };
+
+        if ($this->pageCallback) {
+            $callback = $this->pageCallback;
+        } else {
+            $callback = $defaultCallback;
+            $defaultCallback = null;
+        }
+
+        return $callback($number, $limit, $preserveKeys, $defaultCallback, $this);
     }
 
     /**

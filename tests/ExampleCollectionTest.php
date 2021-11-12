@@ -401,6 +401,41 @@ final class ExampleCollectionTest extends TestCase
         $this->assertCount($collectionEntityListTotalCount, $generatedEntityList);
     }
 
+    public function testBatchCallback(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $id = self::COLLECTION_SIZE + 1;
+        $newEntity = (new TestEntity())
+            ->setId($id)
+            ->setName('Name ' . $id)
+            ->setTitle('Title ' . $id);
+
+        $collection = new TestCollection($generatedEntityList);
+        $collection->setBatchCallback(
+            function ($size, callable $defaultCallback, TestCollection $that) use ($newEntity) {
+                $that->add($newEntity);
+
+                return $defaultCallback($size);
+            }
+        );
+
+        $generatedEntityList[] = $newEntity;
+
+        $batchSize = 2;
+        $collectionEntityListTotalCount = 0;
+
+        foreach ($collection->batch($batchSize) as $collectionEntityList) {
+            $collectionEntityListCount = count($collectionEntityList);
+
+            $this->assertLessThanOrEqual($batchSize, $collectionEntityListCount);
+
+            $collectionEntityListTotalCount += $collectionEntityListCount;
+        }
+
+        $this->assertCount($collectionEntityListTotalCount, $generatedEntityList);
+    }
+
     public function testBatchCount(): void
     {
         $generatedEntityList = $this->generateEntities();
@@ -450,6 +485,51 @@ final class ExampleCollectionTest extends TestCase
         $totalCollectionItemsCount = 0;
 
         for($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
+            $pageItems = $collection->page($pageNumber, $pageLimit);
+
+            $this->assertLessThanOrEqual($pageLimit, count($pageItems));
+
+            $totalCollectionItemsCount += count($pageItems);
+        }
+
+        $this->assertCount($totalCollectionItemsCount, $generatedEntityList);
+    }
+
+    public function testPageCallback(): void
+    {
+        $generatedEntityList = $this->generateEntities();
+
+        $id = self::COLLECTION_SIZE + 1;
+        $newEntity = (new TestEntity())
+            ->setId($id)
+            ->setName('Name ' . $id)
+            ->setTitle('Title ' . $id);
+
+        $collection = new TestCollection($generatedEntityList);
+        $collection->setPageCallback(
+            function (
+                $number,
+                $limit,
+                $preserveKeys,
+                callable $defaultCallback,
+                TestCollection $that
+            ) use (
+                $newEntity
+            ) {
+                $that->add($newEntity);
+
+                return $defaultCallback($number, $limit, $preserveKeys);
+            }
+        );
+
+        $generatedEntityList[] = $newEntity;
+
+        $pageLimit = 2;
+        $pageCount = (int)ceil(count($generatedEntityList) / $pageLimit);
+
+        $totalCollectionItemsCount = 0;
+
+        for ($pageNumber = 1; $pageNumber <= $pageCount; $pageNumber++) {
             $pageItems = $collection->page($pageNumber, $pageLimit);
 
             $this->assertLessThanOrEqual($pageLimit, count($pageItems));

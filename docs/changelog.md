@@ -1,6 +1,14 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.2.0
+- Improved documentation
+- Added method ->setBatchCallback($callback)
+- Added method ->getBatchCallback()
+- Added method ->setPageCallback($callback)
+- Added method ->getPageCallback()
+- Added tests for new methods
+
 ### v1.1.1
 - Improved documentation
 

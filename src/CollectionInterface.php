@@ -27,8 +27,6 @@ interface CollectionInterface extends Iterator, ArrayAccess, Countable, Arrayabl
      *
      * @noinspection PhpMissingReturnTypeInspection
      *
-     * @param callable $callback
-     *
      * @return static
      */
     public function setCountCallback(callable $callback);
@@ -37,6 +35,34 @@ interface CollectionInterface extends Iterator, ArrayAccess, Countable, Arrayabl
      * Get the callback function to be called when the count of the number of items in the collection
      */
     public function getCountCallback(): ?callable;
+
+    /**
+     * Setting the callback function to be called when ->batch(...)
+     *
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function setBatchCallback(?callable $batchCallback);
+
+    /**
+     * Get the callback function to be called when call ->batch(...)
+     */
+    public function getBatchCallback(): ?callable;
+
+    /**
+     * Setting the callback function to be called when ->page(...)
+     *
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function setPageCallback(?callable $callback);
+
+    /**
+     * Get the callback function to be called when call ->page(...)
+     */
+    public function getPageCallback(): ?callable;
 
     /**
      * Verifies conformance of the key and item in the collection

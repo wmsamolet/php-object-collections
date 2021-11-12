@@ -33,6 +33,8 @@ Usage
   - [toArray](#toarray)
   - [setIterator](#setiterator)
   - [setCountCallback](#setcountcallback)
+  - [setBatchCallback](#setbatchcallback)
+  - [setPageCallback](#setpagecallback)
 
 ### TestEntity
 ```php
@@ -807,4 +809,82 @@ foreach ($collection as $testEntity) {
   print_r($testEntity);
   echo '</pre>';
 }
+```
+
+### setBatchCallback
+Example for [Doctrine Pagination](https://www.doctrine-project.org/projects/doctrine-orm/en/2.10/tutorials/pagination.html)
+
+```php
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+$query = $entityManager
+    ->createQuery("SELECT * FROM TestEntity")
+    ->setFirstResult(0);
+
+$paginator = new Paginator($query);
+
+// Set paginator as collection iterator and get count collection from count($paginator);
+$collection = (new TestCollection())
+    ->setIterator($paginator)
+    ->setCountCallback(function(TestCollection $that) {
+        // Equivalent to count($paginator);
+        return count($that->getIterator()->getInnerIterator());
+    })
+    ->setBatchCallback(
+        /** @param TestCollection $that */
+        function($size, $defaultCallback, $that) {
+            $paginator = $that->getIterator()->getInnerIterator();
+            $paginator->setMaxResults($size);
+            
+            return $defaultCallback($size);
+        }
+    );
+
+foreach ($collection->batch(10) as $testEntity) {
+  // Print 10 entities
+  echo '<pre>';
+  print_r($testEntity);
+  echo '</pre>';
+}
+```
+
+### setPageCallback
+Example for [Doctrine Pagination](https://www.doctrine-project.org/projects/doctrine-orm/en/2.10/tutorials/pagination.html)
+
+```php
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+$query = $entityManager
+    ->createQuery("SELECT * FROM TestEntity")
+    ->setFirstResult(0);
+
+$paginator = new Paginator($query);
+
+// Set paginator as collection iterator and get count collection from count($paginator);
+$collection = (new TestCollection())
+    ->setIterator($paginator)
+    ->setCountCallback(function(TestCollection $that) {
+        // Equivalent to count($paginator);
+        return count($that->getIterator()->getInnerIterator());
+    })
+    ->setPageCallback(
+        /** @param TestCollection $that */
+        function(
+            int $pageNumber, 
+            int $limit, 
+            bool $preserveKeys,
+            callable $defaultCallback,
+            $that
+        ) {
+            $paginator = $that->getIterator()->getInnerIterator();
+            $paginator->setMaxResults($limit);
+            
+            return $defaultCallback($pageNumber, $limit, $preserveKeys);
+        }
+    );
+
+// Print 20 entities from 2 page
+echo '<pre>';
+print_r($collection->page(2, 20));
+echo '</pre>';
 ```
