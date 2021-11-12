@@ -1,0 +1,44 @@
+{
+    "name": "wmsamolet/php-object-collections",
+    "type": "library",
+    "description": "PHP object collections - strongly typed collections for objects and more",
+    "keywords": [
+        "php",
+        "object",
+        "collections"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Vitaly Samolet",
+            "email": "wmsamolet@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^4.0 || ^5.0 || ^6.0 || ^7.0 || ^8.0 || ^9.0",
+        "squizlabs/php_codesniffer": "^2.0 || ^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Wmsamolet\\PhpObjectCollections\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wmsamolet\\PhpObjectCollections\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit -v --debug",
+        "phpcs": "vendor/bin/phpcs",
+        "phpcbf": "vendor/bin/phpcbf"
+    },
+    "scripts-descriptions": {
+        "test": "Runs all tests",
+        "phpcs": "Run validation coding standarts",
+        "phpcbf": "Run fix coding standarts"
+    }
+}

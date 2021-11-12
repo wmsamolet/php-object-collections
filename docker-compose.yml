@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+
+  php72:
+    image: wmsamolet/php-object-collections_php72
+    build: ./docker/php72/
+    volumes:
+      - .:/app
+
+  php73:
+    image: wmsamolet/php-object-collections_php73
+    build: ./docker/php73/
+    volumes:
+      - .:/app
+
+  php74:
+    image: wmsamolet/php-object-collections_php74
+    build: ./docker/php74/
+    volumes:
+      - .:/app
+
+  php80:
+    image: wmsamolet/php-object-collections_php80
+    build: ./docker/php80/
+    volumes:
+      - .:/app
