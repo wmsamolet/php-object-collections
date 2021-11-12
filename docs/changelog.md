@@ -1,6 +1,14 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.1.0
+- Improved documentation
+- Added method ->batchCount($size)
+- Added method ->slice($offset, $length)
+- Added method ->page($number, $limit)
+- Added method ->pageCount($limit)
+- Added tests for new methods
+
 ### v1.0.4
 - Improved documentation
 - Add keywords to composer.json

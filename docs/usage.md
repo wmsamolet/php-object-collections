@@ -26,6 +26,10 @@ Usage
   - [filter](#filter)
   - [sort](#sort)
   - [batch](#batch)
+  - [batchCount](#batchcount)
+  - [slice](#slice)
+  - [page](#page)
+  - [pageCount](#pagecount)
   - [toArray](#toarray)
   - [setIterator](#setiterator)
   - [setCountCallback](#setcountcallback)
@@ -644,6 +648,79 @@ foreach ($collection->batch(2) as $exampleEntityBatchList) {
     print_r($exampleEntity);
     echo '</pre>';
 }
+```
+
+### batchCount
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print 3
+echo '<pre>';
+print_r($collection->batchCount(2));
+echo '</pre>';
+```
+
+### slice
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print entities #2,#3,#4
+echo '<pre>';
+print_r($collection->slice(1, 3));
+echo '</pre>';
+```
+
+### page
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print entities #3,#4
+echo '<pre>';
+print_r($collection->page(2, 2));
+echo '</pre>';
+```
+
+### pageCount
+Alias for bachCount($size)
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print 3
+echo '<pre>';
+print_r($collection->pageCount(2));
+echo '</pre>';
 ```
 
 ### toArray
