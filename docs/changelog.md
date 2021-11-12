@@ -1,5 +1,9 @@
 # Changelog ([Semantic Versioning](https://semver.org/)):
 
+### v1.0.3
+- Improved documentation
+- Fix license
+
 ### v1.0.2
 - Improved documentation
 - Remove constructor from Wmsamolet\PhpObjectCollections\ArrayIteratorIterator
