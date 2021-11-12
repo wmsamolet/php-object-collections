@@ -17,6 +17,13 @@ as data (useful for storing ORM Iterators, for example
 - Ability to work with a collection **as an array**
 - Possibility of pagination (in batches) using **->batch($size)**
 
+## Documentation
+
+- [Usage Instructions](docs/usage.md)
+- [Testing](docs/testing.md)
+- [Contributing](docs/contributing.md)
+- [Changelog](docs/changelog.md)
+
 ## Installation
 
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
@@ -34,13 +41,6 @@ or add
 ```
 
 to the requirement section of your `composer.json` file.
-
-## Documentation
-
-- [Usage Instructions](docs/usage.md)
-- [Testing](docs/testing.md)
-- [Contributing](docs/contributing.md)
-- [Changelog](docs/changelog.md)
 
 ## Basic usage
 

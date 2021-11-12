@@ -3,8 +3,8 @@ Usage
 
 - [Creating test entity](#testentity)
 - [Creating test collection](#testobjectcollection)
+- [Add entities via __constructor(...)](#add-entities-via-__constructor)
 - [Collection methods](#methods):
-  - [Add entities via __constructor(...)](#add-entities-via-__constructor)
   - [add](#add)
   - [addList](#addlist)
   - [set](#set)
@@ -14,11 +14,21 @@ Usage
   - [getByOffset](#getbyoffset)
   - [remove](#remove)
   - [removeAll](#removeall)
+  - [key](#key)
+  - [offset](#offset)
+  - [count](#count)
+  - [current](#current)
+  - [first](#first)
+  - [firstKey](#firstkey)
+  - [last](#last)
+  - [lastKey](#lastkey)
   - [map](#map)
   - [filter](#filter)
   - [sort](#sort)
   - [batch](#batch)
   - [toArray](#toarray)
+  - [setIterator](#setiterator)
+  - [setCountCallback](#setcountcallback)
 
 ### TestEntity
 ```php
@@ -145,8 +155,6 @@ class TestObjectCollection extends AbstractObjectCollection
 }
 ```
 
-## Methods:
-
 ### Add entities via __constructor(...)
 ```php
 // Create entity #1
@@ -160,12 +168,16 @@ $collection = new TestObjectCollection([
 ]);
 ```
 
+## Methods:
+
 ### add
 ```php
 // Create entity #1
 $entity1 = (new TestEntity())
     ->setId(1)
     ->setName('entity_1');
+
+$collection = new TestCollection();
 
 // Add entity #1 to collection
 $collection->add($entity1);
@@ -189,10 +201,24 @@ $entity2 = (new TestEntity())
     ->setId(2)
     ->setName('entity_2');
 
+$collection = new TestCollection();
+
 // Add list entities #1,#2 to collection
 $collection->addList([
     $entity1,
     $entity2,
+]);
+
+// Add list entities #1,#2 as array data to collection
+$collection->addList([
+    [
+        'id' => $entity1->getId(),
+        'name' => $entity1->getName(),
+    ],
+    [
+        'id' => $entity2->getId(),
+        'name' => $entity2->getName(),
+    ],
 ]);
 ```
 
@@ -202,6 +228,8 @@ $collection->addList([
 $entity1 = (new TestEntity())
     ->setId(1)
     ->setName('entity_1');
+
+$collection = new TestCollection();
 
 // Add entity #1 to collection (automatically set key from id)
 $collection->set(null, $entity1);
@@ -228,6 +256,8 @@ $entity2 = (new TestEntity())
     ->setId(2)
     ->setName('entity_2');
 
+$collection = new TestCollection();
+
 // Add entity #1 and #2 to collection
 $collection->setList([
     $entity1->getId() => $entity1,
@@ -251,7 +281,7 @@ $collection->set([
 ```php
 $collection = new TestCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+foreach (range(5, 50) as $id) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -340,6 +370,164 @@ $collection->removeAll();
 // Print empty array
 echo '<pre>';
 print_r($collection->getList());
+echo '</pre>';
+```
+
+### key
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print 1
+echo '<pre>';
+print_r($collection->key());
+echo '</pre>';
+
+$collection->next();
+
+// Print 2
+echo '<pre>';
+print_r($collection->key());
+echo '</pre>';
+```
+
+### offset
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print entity #3
+echo '<pre>';
+print_r($collection->offset(2));
+echo '</pre>';
+```
+
+### count
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print 5
+echo '<pre>';
+print_r($collection->count());
+echo '</pre>';
+```
+
+### current
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print entity #1
+echo '<pre>';
+print_r($collection->current());
+echo '</pre>';
+
+$collection->next();
+
+// Print entity #2
+echo '<pre>';
+print_r($collection->current());
+echo '</pre>';
+```
+
+### first
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print entity #1
+echo '<pre>';
+print_r($collection->first());
+echo '</pre>';
+```
+
+### firstKey
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print 1
+echo '<pre>';
+print_r($collection->firstKey());
+echo '</pre>';
+```
+
+### last
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print last entity #5
+echo '<pre>';
+print_r($collection->last());
+echo '</pre>';
+```
+
+### lastKey
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print 5
+echo '<pre>';
+print_r($collection->lastKey());
 echo '</pre>';
 ```
 
@@ -475,4 +663,71 @@ for ($id = 0; $id <= 5; $id++) {
 echo '<pre>';
 print_r($collection->toArray());
 echo '</pre>';
+```
+
+### setIterator
+```php
+// Create entity #1
+$entity1 = (new TestEntity())
+    ->setId(1)
+    ->setName('entity_1');
+    
+// Create entity #2
+$entity2 = (new TestEntity())
+    ->setId(2)
+    ->setName('entity_2');
+
+// Set ArrayIterator with entities
+$collection = (new TestCollection())
+    ->setIterator(
+        new ArrayIterator([
+            $entity1,
+            $entity2,
+        ])
+    );
+
+// Set ArrayIterator with entities as array data
+$collection = (new TestCollection())
+    ->setIterator(
+        new ArrayIterator([
+          [
+              'id' => $entity1->getId(),
+              'name' => $entity1->getName(),
+          ],
+          [
+              'id' => $entity2->getId(),
+              'name' => $entity2->getName(),
+          ],
+        ])
+    );
+```
+
+### setCountCallback
+Example for [Doctrine Pagination](https://www.doctrine-project.org/projects/doctrine-orm/en/2.10/tutorials/pagination.html)
+This approach reduces memory consumption
+
+```php
+use Doctrine\ORM\Tools\Pagination\Paginator;
+
+$query = $entityManager
+    ->createQuery("SELECT * FROM TestEntity")
+    ->setFirstResult(0)
+    ->setMaxResults(100);
+
+$paginator = new Paginator($query);
+
+// Set paginator as collection iterator and get count collection from count($paginator);
+$collection = (new TestCollection())
+    ->setIterator($paginator)
+    ->setCountCallback(function(TestCollection $that) {
+        // Equivalent to count($paginator);
+        return count($that->getIterator()->getInnerIterator());
+    });
+
+foreach ($collection as $testEntity) {
+  // Print entity
+  echo '<pre>';
+  print_r($testEntity);
+  echo '</pre>';
+}
 ```

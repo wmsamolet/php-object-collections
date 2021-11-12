@@ -8,12 +8,13 @@ use ArrayAccess;
 use ArrayIterator;
 use Countable;
 use IteratorIterator;
-use Traversable;
 use Wmsamolet\PhpObjectCollections\Exceptions\CollectionException;
 
 /**
  * This iterator wrapper allows the conversion of anything that is
  * Traversable into an ArrayIterator {@see ArrayIterator}.
+ *
+ * @link https://www.php.net/manual/en/class.iteratoriterator.php
  *
  * @mixin ArrayIterator
  */
@@ -27,11 +28,6 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
 
     /** @var \ArrayIterator */
     protected $dataArrayIterator;
-
-    public function __construct(Traversable $iterator)
-    {
-        parent::__construct($iterator);
-    }
 
     /**
      * @return static
