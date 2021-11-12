@@ -1,6 +1,9 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.2.1
+- Improved documentation
+
 ### v1.2.0
 - Improved documentation
 - Added method ->setBatchCallback($callback)
