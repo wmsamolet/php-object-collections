@@ -195,6 +195,33 @@ interface CollectionInterface extends Iterator, ArrayAccess, Countable, Arrayabl
     public function batch(int $size): iterable;
 
     /**
+     * Get the number of batches
+     *
+     * @param int $size Number of items in a batch
+     */
+    public function batchCount(int $size): int;
+
+    /**
+     * Extract a slice of the array
+     */
+    public function slice(int $offset, int $length): ?array;
+
+    /**
+     * Get items from page
+     *
+     * @param int $number Page number, must be equal to 1 or more
+     * @param int $limit Limit items per page
+     */
+    public function page(int $number, int $limit): ?array;
+
+    /**
+     * Get the number of pages
+     *
+     * @param int $limit Limit items per page
+     */
+    public function pageCount(int $limit): int;
+
+    /**
      * @noinspection PhpMissingParamTypeInspection
      *
      * @param callable $keyOrValue

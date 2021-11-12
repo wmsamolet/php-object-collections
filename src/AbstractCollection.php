@@ -331,6 +331,61 @@ abstract class AbstractCollection implements CollectionInterface
     /**
      * @inheritdoc
      */
+    public function batchCount(int $size): int
+    {
+        return (int)ceil($this->count() / $size);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function slice(int $offset, int $length, bool $preserveKeys = false): ?array
+    {
+        $resultData = [];
+
+        $offsetFrom = $offset;
+        $offsetTo = $offsetFrom + ($length - 1);
+
+        for ($o = $offsetFrom; $o <= $offsetTo; $o++) {
+            $offsetKey = $this->offsetKey($o);
+
+            if ($offsetKey === null) {
+                break;
+            }
+
+            if ($preserveKeys) {
+                $resultData[$offsetKey] = $this->get($offsetKey);
+            } else {
+                $resultData[] = $this->get($offsetKey);
+            }
+        }
+
+        return count($resultData) ? $resultData : null;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function page(int $number, int $limit, bool $preserveKeys = false): ?array
+    {
+        $number = $number > 0 ? $number : 1;
+
+        $offset = ($number - 1) * $limit;
+
+        return $this->slice($offset, $limit, $preserveKeys);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function pageCount(int $limit): int
+    {
+        return $this->batchCount($limit);
+    }
+
+    /**
+     * @inheritdoc
+     */
     public function map($keyOrValue, $value = null, $group = null): array
     {
         $result = [];
