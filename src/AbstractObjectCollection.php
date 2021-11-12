@@ -40,7 +40,8 @@ abstract class AbstractObjectCollection extends AbstractCollection
             if ($valueClassName !== $collectionObjectClassName) {
                 if ($throwException) {
                     throw new CollectionValidateException(
-                        "Collection item value must be equal \"$collectionObjectClassName\" but \"$valueClassName\" given"
+                        "Collection item value must be equal \"$collectionObjectClassName\" " .
+                        "but \"$valueClassName\" given"
                     );
                 }
 

@@ -1,6 +1,25 @@
 Usage
 ====================
 
+- [Creating test entity](#testentity)
+- [Creating test collection](#testobjectcollection)
+- [Collection methods](#methods):
+  - [Add entities via __constructor(...)](#add-entities-via-__constructor)
+  - [add](#add)
+  - [addList](#addlist)
+  - [set](#set)
+  - [setList](#setlist)
+  - [get](#get)
+  - [getList](#getlist)
+  - [getByOffset](#getbyoffset)
+  - [remove](#remove)
+  - [removeAll](#removeall)
+  - [map](#map)
+  - [filter](#filter)
+  - [sort](#sort)
+  - [batch](#batch)
+  - [toArray](#toarray)
+
 ### TestEntity
 ```php
 <?php
@@ -35,7 +54,7 @@ class TestEntity
 }
 ```
 
-### ExampleEntityCollection
+### TestObjectCollection
 ```php
 <?php
 
@@ -48,7 +67,7 @@ use Wmsamolet\PhpObjectCollections\AbstractCollection;
  * @method null|TestEntity get(int $key)
  * @method null|TestEntity getByOffset(int $key)
  */
-class ExampleEntityCollection extends AbstractObjectCollection
+class TestObjectCollection extends AbstractObjectCollection
 {
     /**
      * Set collection item as TestEntity object class
@@ -106,7 +125,7 @@ class ExampleEntityCollection extends AbstractObjectCollection
     /**
      * [OPTIONAL METHOD]
      * 
-     * @example (new ExampleEntityCollection([...]))->toArray()
+     * @example (new TestObjectCollection([...]))->toArray()
      * 
      * @return string[][]|int[][]
      */  
@@ -126,6 +145,8 @@ class ExampleEntityCollection extends AbstractObjectCollection
 }
 ```
 
+## Methods:
+
 ### Add entities via __constructor(...)
 ```php
 // Create entity #1
@@ -134,65 +155,146 @@ $entity1->setId(1);
 $entity1->setName('entity_1');
 
 // Add entities #1 to collection
-$collection = new ExampleEntityCollection([
+$collection = new TestObjectCollection([
     $entity1,
-]);
-```
-
-### addList
-```php
-// Create entity #2
-$entity2 = new TestEntity();
-$entity2->setId(2);
-$entity2->setName('entity_2');
-
-// Create entity #3
-$entity3 = new TestEntity();
-$entity3->setId(3);
-$entity3->setName('entity_3');
-
-// Add list entities #2,#3 to collection
-$collection->addList([
-    $entity2,
-    $entity3,
 ]);
 ```
 
 ### add
 ```php
-// Create entity #4
-$entity4 = new TestEntity();
-$entity4->setId(4);
-$entity4->setName('entity_4');
+// Create entity #1
+$entity1 = (new TestEntity())
+    ->setId(1)
+    ->setName('entity_1');
 
-// Add entity #4 to collection
-$collection->add($entity4);
+// Add entity #1 to collection
+$collection->add($entity1);
 
-// Add entity #5 to collection as an array
+// Or add as array data
 $collection->add([
-    'id' => 5,
-    'name' => 'entity_5',
+    'id' => $entity1->getId(),
+    'name' => $entity1->getName(),
 ]);
 ```
 
-### getList
+### addList
 ```php
-// Print entities: #1,#2,#3,#4,#5
-echo '<pre>';
-print_r($collection->getList());
-echo '</pre>';
+// Create entity #1
+$entity1 = (new TestEntity())
+    ->setId(1)
+    ->setName('entity_1');
+
+// Create entity #2
+$entity2 = (new TestEntity())
+    ->setId(2)
+    ->setName('entity_2');
+
+// Add list entities #1,#2 to collection
+$collection->addList([
+    $entity1,
+    $entity2,
+]);
+```
+
+### set
+```php
+// Create entity #1
+$entity1 = (new TestEntity())
+    ->setId(1)
+    ->setName('entity_1');
+
+// Add entity #1 to collection (automatically set key from id)
+$collection->set(null, $entity1);
+
+// Set entity #1 to collection (replace)
+$collection->set($entity1->getId(), $entity1);
+
+// Or set as array data (replace)
+$collection->set($entity1->getId(), [
+    'id' => $entity1->getId(),
+    'name' => $entity1->getName(),
+]);
+```
+
+### setList
+```php
+// Create entity #1
+$entity1 = (new TestEntity())
+    ->setId(1)
+    ->setName('entity_1');
+    
+// Create entity #2
+$entity2 = (new TestEntity())
+    ->setId(2)
+    ->setName('entity_2');
+
+// Add entity #1 and #2 to collection
+$collection->setList([
+    $entity1->getId() => $entity1,
+    $entity2->getId() => $entity2,
+]);
+
+// Or set all as array data
+$collection->set([
+    [
+        'id' => $entity1->getId(),
+        'name' => $entity1->getName(),
+    ],
+    [
+        'id' => $entity2->getId(),
+        'name' => $entity2->getName(),
+    ],
+]);
 ```
 
 ### get
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 // Print entity #2
 echo '<pre>';
 print_r($collection->get(2));
 echo '</pre>';
 ```
 
+### getList
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Print entities: #1,#2,#3,#4,#5
+echo '<pre>';
+print_r($collection->getList());
+echo '</pre>';
+```
+
 ### getByOffset
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 // Print entity #4
 echo '<pre>';
 print_r($collection->getByOffset(3));
@@ -201,6 +303,16 @@ echo '</pre>';
 
 ### remove
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 // Remove entity #3 from collection
 $collection->remove(3);
 
@@ -212,6 +324,16 @@ echo '</pre>';
 
 ### removeAll
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 // Remove all entities from collection
 $collection->removeAll();
 
@@ -221,17 +343,18 @@ print_r($collection->getList());
 echo '</pre>';
 ```
 
-### toArray
-```php
-// Get all entities as array data (entities #1,#2,#4,#5)
-// Print: array(array('id' => 1, 'name' => 'name_1'), array(...), ...) 
-echo '<pre>';
-print_r($collection->toArray());
-echo '</pre>';
-```
-
 ### map
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 /**
  * Map data 
  */
@@ -252,11 +375,21 @@ echo '</pre>';
 
 ### filter
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 /**
  * Filter collection items
  * Remove entity #2 from collection
  */
-$exampleEntityCollection = $collection->filter(
+$TestObjectCollection = $collection->filter(
     function(TestEntity $entity) {
         return $entity->getId() !== 2;
     }
@@ -264,16 +397,26 @@ $exampleEntityCollection = $collection->filter(
 
 // Print entities: #1,#3,#4,#5
 echo '<pre>';
-print_r($exampleEntityCollection->getList());
+print_r($TestObjectCollection->getList());
 echo '</pre>';
 ```
 
 ### sort
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 /**
  * Sort descending by id collection items
  */
-$exampleEntityCollection = $collection->sort(
+$TestObjectCollection = $collection->sort(
     function(TestEntity $entityA, TestEntity $entityB) {
         return $entityA->getId() < $entityB->getId();
     }
@@ -281,12 +424,22 @@ $exampleEntityCollection = $collection->sort(
 
 // Print entities: #5,#4,#3,#2,#1
 echo '<pre>';
-print_r($exampleEntityCollection->getList());
+print_r($TestObjectCollection->getList());
 echo '</pre>';
 ```
 
 ### batch
 ```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
 /**
  * Batch example
  * 
@@ -303,4 +456,23 @@ foreach ($collection->batch(2) as $exampleEntityBatchList) {
     print_r($exampleEntity);
     echo '</pre>';
 }
+```
+
+### toArray
+```php
+$collection = new TestCollection();
+
+for ($id = 0; $id <= 5; $id++) {
+    $collection->add(
+        (new TestEntity())
+            ->setId($id)
+            ->setName('entity_' . $id);
+    );
+}
+
+// Get all entities as array data (entities #1,#2,#4,#5)
+// Print: array(array('id' => 1, 'name' => 'name_1'), array(...), ...) 
+echo '<pre>';
+print_r($collection->toArray());
+echo '</pre>';
 ```

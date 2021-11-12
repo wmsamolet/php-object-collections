@@ -1,6 +1,21 @@
 # PHP Object Collections
 
+[![Latest Stable Version](http://poser.pugx.org/wmsamolet/php-object-collections/v)](https://packagist.org/packages/wmsamolet/php-object-collections)
+[![Total Downloads](http://poser.pugx.org/wmsamolet/php-object-collections/downloads)](https://packagist.org/packages/wmsamolet/php-object-collections) 
+[![Latest Unstable Version](http://poser.pugx.org/wmsamolet/php-object-collections/v/unstable)](https://packagist.org/packages/wmsamolet/php-object-collections) 
+[![License](http://poser.pugx.org/wmsamolet/php-object-collections/license)](https://packagist.org/packages/wmsamolet/php-object-collections) 
+[![PHP Version Require](http://poser.pugx.org/wmsamolet/php-object-collections/require/php)](https://packagist.org/packages/wmsamolet/php-object-collections)
+[![PHP Version Require](https://img.shields.io/badge/Coding%20Style-PSR--12-%23256d4e)](https://www.php-fig.org/psr/psr-12/)
+
 Strongly typed collections for objects and more
+
+### Advantages:
+- Storage in collections of **strictly** specified objects
+- Ability to specify **ANY [Traversable](https://www.php.net/manual/en/class.traversable.php) object** 
+as data (useful for storing ORM Iterators, for example 
+[https://www.doctrine-project.org/projects/doctrine-orm/en/2.10/tutorials/pagination.html](https://www.doctrine-project.org/projects/doctrine-orm/en/2.10/tutorials/pagination.html))
+- Ability to work with a collection **as an array**
+- Possibility of pagination (in batches) using **->batch($size)**
 
 ## Installation
 
@@ -19,6 +34,13 @@ or add
 ```
 
 to the requirement section of your `composer.json` file.
+
+## Documentation
+
+- [Usage Instructions](docs/usage.md)
+- [Testing](docs/testing.md)
+- [Contributing](docs/contributing.md)
+- [Changelog](docs/changelog.md)
 
 ## Basic usage
 
@@ -73,39 +95,6 @@ $collection = new ExampleEntityCollection([
 echo '<pre>';
 print_r($collection->getList());
 echo '</pre>';
-```
-
-## Documentation
-
-- [Usage Instructions](docs/usage.md)
-
-## Testing
-
-```
-composer phpcs
-composer test
-```
-
-or via docker-compose
-
-```
-docker-composer run php72 composer phpcs
-docker-composer run php72 composer test
-```
-
-```
-docker-composer run php73 composer phpcs
-docker-composer run php73 composer test
-```
-
-```
-docker-composer run php74 composer phpcs
-docker-composer run php74 composer test
-```
-
-```
-docker-composer run php80 composer phpcs
-docker-composer run php80 composer test
 ```
 
 ## License
