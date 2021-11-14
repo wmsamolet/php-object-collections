@@ -13,7 +13,7 @@
     ```
    or via Docker
     ```
-    docker-composer run php72 composer install
+    docker-compose run php72 composer install
     ```
 
 1. Create a Feature Branch
@@ -25,7 +25,7 @@
     ```
    or via Docker
     ```
-    docker-composer run php72 composer test
+    docker-compose run php72 composer test
     ```
 
 1. (Recommended) Check whether your code conforms to our Coding Standards by running
@@ -35,7 +35,7 @@
     ```
    or via Docker
     ```
-    docker-composer run php72 composer phpcs
+    docker-compose run php72 composer phpcs
     ```
 
 1. Send us a Pull Request

@@ -1,6 +1,9 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.2.3
+- Improved documentation
+
 ### v1.2.2
 - Improved documentation
 
