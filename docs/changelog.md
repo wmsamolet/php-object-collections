@@ -1,6 +1,14 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.3.0
+- Improved documentation
+- Improved tests
+- Added a class for creating dynamic object collections: **_Wmsamolet\PhpObjectCollections\ObjectCollection_**
+- Added a class for creating typed collections: **_Wmsamolet\PhpObjectCollections\TypedCollection_**
+- Added abstract class for declaring typed static collections: **_Wmsamolet\PhpObjectCollections\AbstractTypedCollection_**
+- Added composer command for validate coding standards and run all test: ```composer check```
+
 ### v1.2.3
 - Improved documentation
 

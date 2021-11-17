@@ -1,8 +1,8 @@
-Usage
+Usage static object collections
 ====================
 
 - [Creating test entity](#testentity)
-- [Creating test collection](#testobjectcollection)
+- [Creating test entity static collection](#testentitystaticcollection)
 - [Add entities via __constructor(...)](#add-entities-via-__constructor)
 - [Collection methods](#methods):
   - [add](#add)
@@ -70,7 +70,7 @@ class TestEntity
 }
 ```
 
-### TestObjectCollection
+### TestEntityStaticCollection
 ```php
 <?php
 
@@ -83,7 +83,7 @@ use Wmsamolet\PhpObjectCollections\AbstractCollection;
  * @method null|TestEntity get(int $key)
  * @method null|TestEntity getByOffset(int $key)
  */
-class TestObjectCollection extends AbstractObjectCollection
+class TestEntityStaticCollection extends AbstractObjectCollection
 {
     /**
      * Set collection item as TestEntity object class
@@ -141,7 +141,7 @@ class TestObjectCollection extends AbstractObjectCollection
     /**
      * [OPTIONAL METHOD]
      * 
-     * @example (new TestObjectCollection([...]))->toArray()
+     * @example (new TestEntityStaticCollection([...]))->toArray()
      * 
      * @return string[][]|int[][]
      */  
@@ -169,7 +169,7 @@ $entity1->setId(1);
 $entity1->setName('entity_1');
 
 // Add entities #1 to collection
-$collection = new TestObjectCollection([
+$collection = new TestEntityStaticCollection([
     $entity1,
 ]);
 ```
@@ -183,7 +183,7 @@ $entity1 = (new TestEntity())
     ->setId(1)
     ->setName('entity_1');
 
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 // Add entity #1 to collection
 $collection->add($entity1);
@@ -207,7 +207,7 @@ $entity2 = (new TestEntity())
     ->setId(2)
     ->setName('entity_2');
 
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 // Add list entities #1,#2 to collection
 $collection->addList([
@@ -235,7 +235,7 @@ $entity1 = (new TestEntity())
     ->setId(1)
     ->setName('entity_1');
 
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 // Add entity #1 to collection (automatically set key from id)
 $collection->set(null, $entity1);
@@ -262,7 +262,7 @@ $entity2 = (new TestEntity())
     ->setId(2)
     ->setName('entity_2');
 
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 // Add entity #1 and #2 to collection
 $collection->setList([
@@ -285,7 +285,7 @@ $collection->set([
 
 ### get
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 foreach (range(5, 50) as $id) {
     $collection->add(
@@ -303,7 +303,7 @@ echo '</pre>';
 
 ### getList
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -321,9 +321,9 @@ echo '</pre>';
 
 ### getByOffset
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -339,9 +339,9 @@ echo '</pre>';
 
 ### remove
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -360,9 +360,9 @@ echo '</pre>';
 
 ### removeAll
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -381,9 +381,9 @@ echo '</pre>';
 
 ### key
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -406,9 +406,9 @@ echo '</pre>';
 
 ### offset
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -424,9 +424,9 @@ echo '</pre>';
 
 ### count
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -442,9 +442,9 @@ echo '</pre>';
 
 ### current
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -467,9 +467,9 @@ echo '</pre>';
 
 ### first
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -485,9 +485,9 @@ echo '</pre>';
 
 ### firstKey
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -503,9 +503,9 @@ echo '</pre>';
 
 ### last
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -521,9 +521,9 @@ echo '</pre>';
 
 ### lastKey
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
-for ($id = 0; $id <= 5; $id++) {
+for ($id = 1; $id <= 5; $id++) {
     $collection->add(
         (new TestEntity())
             ->setId($id)
@@ -539,7 +539,7 @@ echo '</pre>';
 
 ### map
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -569,7 +569,7 @@ echo '</pre>';
 
 ### filter
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -583,7 +583,7 @@ for ($id = 0; $id <= 5; $id++) {
  * Filter collection items
  * Remove entity #2 from collection
  */
-$TestObjectCollection = $collection->filter(
+$collection->filter(
     function(TestEntity $entity) {
         return $entity->getId() !== 2;
     }
@@ -591,13 +591,13 @@ $TestObjectCollection = $collection->filter(
 
 // Print entities: #1,#3,#4,#5
 echo '<pre>';
-print_r($TestObjectCollection->getList());
+print_r($collection->getList());
 echo '</pre>';
 ```
 
 ### sort
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -610,7 +610,7 @@ for ($id = 0; $id <= 5; $id++) {
 /**
  * Sort descending by id collection items
  */
-$TestObjectCollection = $collection->sort(
+$collection->sort(
     function(TestEntity $entityA, TestEntity $entityB) {
         return $entityA->getId() < $entityB->getId();
     }
@@ -618,13 +618,13 @@ $TestObjectCollection = $collection->sort(
 
 // Print entities: #5,#4,#3,#2,#1
 echo '<pre>';
-print_r($TestObjectCollection->getList());
+print_r($collection->getList());
 echo '</pre>';
 ```
 
 ### batch
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -654,7 +654,7 @@ foreach ($collection->batch(2) as $exampleEntityBatchList) {
 
 ### batchCount
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -672,7 +672,7 @@ echo '</pre>';
 
 ### slice
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -690,7 +690,7 @@ echo '</pre>';
 
 ### page
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -709,7 +709,7 @@ echo '</pre>';
 ### pageCount
 Alias for bachCount($size)
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -727,7 +727,7 @@ echo '</pre>';
 
 ### toArray
 ```php
-$collection = new TestCollection();
+$collection = new TestEntityStaticCollection();
 
 for ($id = 0; $id <= 5; $id++) {
     $collection->add(
@@ -757,7 +757,7 @@ $entity2 = (new TestEntity())
     ->setName('entity_2');
 
 // Set ArrayIterator with entities
-$collection = (new TestCollection())
+$collection = (new TestEntityStaticCollection())
     ->setIterator(
         new ArrayIterator([
             $entity1,
@@ -766,7 +766,7 @@ $collection = (new TestCollection())
     );
 
 // Set ArrayIterator with entities as array data
-$collection = (new TestCollection())
+$collection = (new TestEntityStaticCollection())
     ->setIterator(
         new ArrayIterator([
           [
@@ -796,9 +796,9 @@ $query = $entityManager
 $paginator = new Paginator($query);
 
 // Set paginator as collection iterator and get count collection from count($paginator);
-$collection = (new TestCollection())
+$collection = (new TestEntityStaticCollection())
     ->setIterator($paginator)
-    ->setCountCallback(function(TestCollection $that) {
+    ->setCountCallback(function(TestEntityStaticCollection $that) {
         // Equivalent to count($paginator);
         return count($that->getIterator()->getInnerIterator());
     });
@@ -824,14 +824,14 @@ $query = $entityManager
 $paginator = new Paginator($query);
 
 // Set paginator as collection iterator and get count collection from count($paginator);
-$collection = (new TestCollection())
+$collection = (new TestEntityStaticCollection())
     ->setIterator($paginator)
-    ->setCountCallback(function(TestCollection $that) {
+    ->setCountCallback(function(TestEntityStaticCollection $that) {
         // Equivalent to count($paginator);
         return count($that->getIterator()->getInnerIterator());
     })
     ->setBatchCallback(
-        /** @param TestCollection $that */
+        /** @param TestEntityStaticCollection $that */
         function($size, $defaultCallback, $that) {
             $paginator = $that->getIterator()->getInnerIterator();
             $paginator->setMaxResults($size);
@@ -861,14 +861,14 @@ $query = $entityManager
 $paginator = new Paginator($query);
 
 // Set paginator as collection iterator and get count collection from count($paginator);
-$collection = (new TestCollection())
+$collection = (new TestEntityStaticCollection())
     ->setIterator($paginator)
-    ->setCountCallback(function(TestCollection $that) {
+    ->setCountCallback(function(TestEntityStaticCollection $that) {
         // Equivalent to count($paginator);
         return count($that->getIterator()->getInnerIterator());
     })
     ->setPageCallback(
-        /** @param TestCollection $that */
+        /** @param TestEntityStaticCollection $that */
         function(
             int $pageNumber, 
             int $limit, 

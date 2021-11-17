@@ -19,7 +19,8 @@ as data (useful for storing ORM Iterators, for example
 
 ## Documentation
 
-- [Usage Instructions](docs/usage.md)
+- [Usage object static collection](docs/usage-object-static.md)
+- [Usage typed static collection](docs/usage-typed-static.md)
 - [Testing](docs/testing.md)
 - [Contributing](docs/contributing.md)
 - [Changelog](docs/changelog.md)
@@ -42,7 +43,55 @@ or add
 
 to the requirement section of your `composer.json` file.
 
-## Basic usage
+## Basic usage **object** collections
+
+```php
+<?php
+
+use Wmsamolet\PhpObjectCollections\ObjectCollection;
+
+class TestEntity
+{
+    /** @var int */
+    private $id;
+    
+    public function getId(): int
+    {
+        return $this->id;
+    }
+    
+    public function setId(int $id): void 
+    {
+        $this->id = $id;
+    }
+}
+
+// Create collection with values 1,2,3
+$collection = new ObjectCollection(
+    TestEntity::class, 
+    [
+        (new TestEntity())->setId(1), 
+        (new TestEntity())->setId(2), 
+        (new TestEntity())->setId(3), 
+    ]
+);
+
+// Print entities: #1,#2,#3
+echo '<pre>';
+print_r($collection->getList());
+echo '</pre>';
+
+// If we try to add another collection to the collection
+// WE WILL GET AN EXCEPTION!
+
+class TestOtherEntity extends TestEntity
+{
+}
+
+$collection->add((new TestOtherEntity())->setId(4));
+```
+
+## Basic usage **object static** collections
 
 ```php
 <?php
@@ -94,6 +143,76 @@ $collection = new ExampleEntityCollection([
 echo '<pre>';
 print_r($collection->getList());
 echo '</pre>';
+
+// If we try to add another collection or value with another to the collection
+// WE WILL GET AN EXCEPTION!
+
+class TestOtherEntity extends TestEntity
+{
+}
+
+$collection->add((new TestOtherEntity())->setId(4));
+$collection->add(5);
+```
+
+## Basic usage **typed** collections
+
+```php
+<?php
+
+use Wmsamolet\PhpObjectCollections\TypedCollection;
+
+// Create collection with values 1,2,3
+$collection = new TypedCollection(TypedCollection::TYPE_INTEGER, [1, 2, 3]);
+
+// Print values: 1,2,3
+echo '<pre>';
+print_r($collection->getList());
+echo '</pre>';
+
+// If we try to add value with another type to the collection
+// WE WILL GET AN EXCEPTION!
+$collection->add('4');
+$collection->add([5]);
+```
+
+## Basic usage **typed static** collections
+
+```php
+<?php
+
+use Wmsamolet\PhpObjectCollections\AbstractTypedCollection;
+
+/**
+ * Add PhpDoc for IDE autocompletion when working with this collection
+ * 
+ * @method int[] getList()
+ * @method null|int get(int $key)
+ * @method null|int getByOffset(int $key)
+ */
+class TestIdCollection extends AbstractTypedCollection
+{
+    /**
+     * Set collection item value type
+     */
+    public function collectionValueType(): string
+    {
+        return static::TYPE_INT;
+    }
+}
+
+// Create collection with ids #1,#2,#3 to collection
+$collection = new TestIdCollection([1, 2, 3]);
+
+// Print ids: #1,#2,#3
+echo '<pre>';
+print_r($collection->getList());
+echo '</pre>';
+
+// If we try to add value with another type to the collection
+// WE WILL GET AN EXCEPTION!
+$collection->add('4');
+$collection->add([5]);
 ```
 
 ## License

@@ -5,18 +5,18 @@ namespace Wmsamolet\PhpObjectCollections\Tests;
 use ArrayIterator;
 use PHPUnit\Framework\TestCase;
 use Wmsamolet\PhpObjectCollections\Exceptions\CollectionValidateException;
+use Wmsamolet\PhpObjectCollections\ObjectCollection;
 use Wmsamolet\PhpObjectCollections\Tests\Fixtures\TestEntity;
-use Wmsamolet\PhpObjectCollections\Tests\Fixtures\TestIndexedCollection;
 use Wmsamolet\PhpObjectCollections\Tests\Fixtures\TestOtherEntity;
 
-final class ExampleIndexedCollectionTest extends TestCase
+final class ObjectCollectionTest extends TestCase
 {
     private const COLLECTION_SIZE = 5;
 
     /**
      * @return TestEntity[]
      */
-    public function generateEntities(): array
+    public function generateObjectList(): array
     {
         $entityList = [];
         $idList = range(1, self::COLLECTION_SIZE);
@@ -33,128 +33,124 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testCreationThroughTheConstructor(): void
     {
-        $collection = new TestIndexedCollection(
-            $this->generateEntities()
-        );
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
-        $this->assertCollection($collection);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testAdd(): void
     {
-        $collection = new TestIndexedCollection();
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class);
 
-        foreach ($this->generateEntities() as $entity) {
+        foreach ($generatedObjectList as $entity) {
             $collection->add($entity);
         }
 
-        $this->assertCollection($collection);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testAddList(): void
     {
-        $collection = (new TestIndexedCollection())->addList($this->generateEntities());
+        $generatedObjectList = $this->generateObjectList();
+        $collection = (new ObjectCollection(TestEntity::class))
+            ->addList($generatedObjectList);
 
-        $this->assertCollection($collection);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testSet(): void
     {
-        $collection = new TestIndexedCollection();
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class);
 
-        foreach ($this->generateEntities() as $entity) {
+        foreach ($generatedObjectList as $entity) {
             $collection->set($entity->getId(), $entity);
         }
 
-        $this->assertCollection($collection);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testSetList(): void
     {
-        $collection = (new TestIndexedCollection())->setList($this->generateEntities());
+        $generatedObjectList = $this->generateObjectList();
+        $collection = (new ObjectCollection(TestEntity::class))
+            ->setList($generatedObjectList);
 
-        $this->assertCollection($collection);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testSetIterator(): void
     {
-        $collection = (new TestIndexedCollection())
+        $generatedObjectList = $this->generateObjectList();
+        $collection = (new ObjectCollection(TestEntity::class))
             ->setIterator(
-                new ArrayIterator($this->generateEntities())
+                new ArrayIterator($generatedObjectList)
             );
 
-        $this->assertCollection($collection);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testFirstKey(): void
     {
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
-        $collection = new TestIndexedCollection($generatedEntityList);
-
-        $this->assertSame(
-            $collection->firstKey(),
-            $generatedEntityList[0]->getId()
-        );
+        $this->assertSame($collection->firstKey(), 0);
     }
 
     public function testFirstValue(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $this->assertSame(
             $collection->first(),
-            $generatedEntityList[0]
+            $generatedObjectList[0]
         );
     }
 
     public function testLastKey(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $this->assertSame(
             $collection->lastKey(),
-            $generatedEntityList[self::COLLECTION_SIZE - 1]->getId()
+            self::COLLECTION_SIZE - 1
         );
     }
 
     public function testLastValue(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $this->assertSame(
             $collection->last(),
-            $generatedEntityList[self::COLLECTION_SIZE - 1]
+            $generatedObjectList[self::COLLECTION_SIZE - 1]
         );
     }
 
     public function testHas(): void
     {
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
-        $collection = new TestIndexedCollection($generatedEntityList);
-
-        foreach ($generatedEntityList as $generatedEntity) {
-            $this->assertTrue($collection->has($generatedEntity->getId()));
+        foreach (array_keys($generatedObjectList) as $key) {
+            $this->assertTrue($collection->has($key));
         }
     }
 
     public function testGetAll(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
-
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
         $collectionEntityList = $collection->getList();
 
-        foreach ($generatedEntityList as $generatedEntity) {
-            $collectionEntity = $collectionEntityList[$generatedEntity->getId()] ?? null;
+        foreach ($generatedObjectList as $offset => $generatedEntity) {
+            $collectionEntity = $collectionEntityList[$offset] ?? null;
 
             $this->assertNotEmpty($collectionEntity);
 
@@ -166,17 +162,11 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testGetAllKeys(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $diff = array_diff(
-            array_map(
-                static function (TestEntity $entity) {
-                    return $entity->getId();
-                },
-                $generatedEntityList
-            ),
+            array_keys($generatedObjectList),
             $collection->keyList()
         );
 
@@ -185,23 +175,23 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testGetByOffset(): void
     {
-        $generatedEntityList = [];
-        $generatedEntityListTemp = $this->generateEntities();
-        $generatedEntityListTempKeys = array_keys($generatedEntityListTemp);
+        $generatedObjectList = [];
+        $generatedObjectListTemp = $this->generateObjectList();
+        $generatedObjectListTempKeys = array_keys($generatedObjectListTemp);
 
-        shuffle($generatedEntityListTempKeys);
+        shuffle($generatedObjectListTempKeys);
 
-        foreach ($generatedEntityListTempKeys as $offset) {
-            $generatedEntityList[$offset] = clone $generatedEntityListTemp[$offset];
+        foreach ($generatedObjectListTempKeys as $offset) {
+            $generatedObjectList[$offset] = clone $generatedObjectListTemp[$offset];
 
-            unset($generatedEntityListTemp[$offset]);
+            unset($generatedObjectListTemp[$offset]);
         }
 
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $offset = 0;
 
-        foreach ($generatedEntityList as $generatedEntity) {
+        foreach ($generatedObjectList as $generatedEntity) {
             $collectionEntity = $collection->getByOffset($offset);
 
             $this->assertSame($collectionEntity->getId(), $generatedEntity->getId());
@@ -212,42 +202,41 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testRemove(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         /** @noinspection PhpAssignmentInConditionInspection */
-        while ($generatedEntity = array_shift($generatedEntityList)) {
+        while ($generatedEntity = array_shift($generatedObjectList)) {
             $key = $collection->firstKey();
 
             $collectionEntity = $collection->get($key);
 
             $collection->remove($key);
 
-            $this->assertSame(count($generatedEntityList), $collection->count());
+            $this->assertSame(count($generatedObjectList), $collection->count());
             $this->assertSame($generatedEntity, $collectionEntity);
         }
 
         $this->assertCount(0, $collection->getList());
         $this->assertSame($collection->count(), 0);
 
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
 
-        foreach ($generatedEntityList as $generatedEntity) {
+        foreach ($generatedObjectList as $generatedEntity) {
             $collection->add($generatedEntity);
         }
 
-        $this->assertSame(count($generatedEntityList), $collection->count());
-        $this->assertCount(count($generatedEntityList), $collection->getList());
+        $this->assertSame(count($generatedObjectList), $collection->count());
+        $this->assertCount(count($generatedObjectList), $collection->getList());
 
         /** @noinspection PhpAssignmentInConditionInspection */
-        while ($generatedEntity = array_pop($generatedEntityList)) {
+        while ($generatedEntity = array_pop($generatedObjectList)) {
             $key = $collection->lastKey();
             $collectionEntity = $collection->get($key);
 
             $collection->remove($key);
 
-            $this->assertSame(count($generatedEntityList), $collection->count());
+            $this->assertSame(count($generatedObjectList), $collection->count());
             $this->assertSame($generatedEntity, $collectionEntity);
         }
 
@@ -257,26 +246,25 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testRemoveAll(): void
     {
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
-        $collection = new TestIndexedCollection($generatedEntityList);
-
-        $this->assertCount(count($generatedEntityList), $collection->getList());
+        $this->assertCount(count($generatedObjectList), $collection->getList());
         /** @noinspection PhpUnitTestsInspection */
-        $this->assertSame($collection->count(), count($generatedEntityList));
+        $this->assertSame($collection->count(), count($generatedObjectList));
 
         $collection->removeAll();
 
         $this->assertCount(0, $collection->getList());
         $this->assertSame($collection->count(), 0);
 
-        foreach ($generatedEntityList as $generatedEntity) {
+        foreach ($generatedObjectList as $generatedEntity) {
             $collection->add($generatedEntity);
         }
 
-        $this->assertCount(count($generatedEntityList), $collection->getList());
+        $this->assertCount(count($generatedObjectList), $collection->getList());
         /** @noinspection PhpUnitTestsInspection */
-        $this->assertSame(count($generatedEntityList), $collection->count());
+        $this->assertSame(count($generatedObjectList), $collection->count());
 
         $collection->removeAll();
 
@@ -286,9 +274,8 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testMap(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $mapData = $collection->map(
             function (TestEntity $entity) {
@@ -296,7 +283,7 @@ final class ExampleIndexedCollectionTest extends TestCase
             }
         );
 
-        foreach ($generatedEntityList as $offset => $generatedEntity) {
+        foreach ($generatedObjectList as $offset => $generatedEntity) {
             $id = $generatedEntity->getId();
 
             $this->assertArrayHasKey($offset, $mapData);
@@ -312,7 +299,7 @@ final class ExampleIndexedCollectionTest extends TestCase
             }
         );
 
-        foreach ($generatedEntityList as $generatedEntity) {
+        foreach ($generatedObjectList as $generatedEntity) {
             $id = $generatedEntity->getId();
             $title = $generatedEntity->getTitle();
 
@@ -332,7 +319,7 @@ final class ExampleIndexedCollectionTest extends TestCase
             }
         );
 
-        foreach ($generatedEntityList as $generatedEntity) {
+        foreach ($generatedObjectList as $generatedEntity) {
             $id = $generatedEntity->getId();
             $title = $generatedEntity->getTitle();
             $name = $generatedEntity->getName();
@@ -345,13 +332,12 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testFilter(): void
     {
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
-        $collection = new TestIndexedCollection($generatedEntityList);
-
-        $generatedEntityList = array_values(
+        $generatedObjectList = array_values(
             array_filter(
-                $generatedEntityList,
+                $generatedObjectList,
                 static function (TestEntity $entity) {
                     return $entity->getId() > 2;
                 }
@@ -364,17 +350,16 @@ final class ExampleIndexedCollectionTest extends TestCase
             }
         );
 
-        $this->assertCollection($collection, $generatedEntityList);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testSort(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         usort(
-            $generatedEntityList,
+            $generatedObjectList,
             static function (TestEntity $entityA, TestEntity $entityB) {
                 return $entityA->getId() < $entityB->getId();
             }
@@ -386,14 +371,13 @@ final class ExampleIndexedCollectionTest extends TestCase
             }
         );
 
-        $this->assertCollection($collection, $generatedEntityList);
+        $this->assertCollection($collection, $generatedObjectList);
     }
 
     public function testBatch(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $batchSize = 2;
         $collectionEntityListTotalCount = 0;
@@ -406,12 +390,12 @@ final class ExampleIndexedCollectionTest extends TestCase
             $collectionEntityListTotalCount += $collectionEntityListCount;
         }
 
-        $this->assertCount($collectionEntityListTotalCount, $generatedEntityList);
+        $this->assertCount($collectionEntityListTotalCount, $generatedObjectList);
     }
 
     public function testBatchCallback(): void
     {
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
 
         $id = self::COLLECTION_SIZE + 1;
         $newEntity = (new TestEntity())
@@ -419,16 +403,16 @@ final class ExampleIndexedCollectionTest extends TestCase
             ->setName('Name ' . $id)
             ->setTitle('Title ' . $id);
 
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
         $collection->setBatchCallback(
-            function ($size, callable $defaultCallback, TestIndexedCollection $that) use ($newEntity) {
+            function ($size, callable $defaultCallback, ObjectCollection $that) use ($newEntity) {
                 $that->add($newEntity);
 
                 return $defaultCallback($size);
             }
         );
 
-        $generatedEntityList[] = $newEntity;
+        $generatedObjectList[] = $newEntity;
 
         $batchSize = 2;
         $collectionEntityListTotalCount = 0;
@@ -441,17 +425,16 @@ final class ExampleIndexedCollectionTest extends TestCase
             $collectionEntityListTotalCount += $collectionEntityListCount;
         }
 
-        $this->assertCount($collectionEntityListTotalCount, $generatedEntityList);
+        $this->assertCount($collectionEntityListTotalCount, $generatedObjectList);
     }
 
     public function testBatchCount(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $batchSize = 2;
-        $batchCount = (int)ceil(count($generatedEntityList) / $batchSize);
+        $batchCount = (int)ceil(count($generatedObjectList) / $batchSize);
 
         $collectionBatchCount = $collection->batchCount($batchSize);
 
@@ -460,16 +443,16 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testSlice(): void
     {
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
 
         $sliceOffset = 1;
-        $sliceLength = count($generatedEntityList) - 2;
+        $sliceLength = count($generatedObjectList) - 2;
 
-        $generatedEntitySliceList = array_slice($generatedEntityList, $sliceOffset, $sliceLength);
+        $generatedEntitySliceList = array_slice($generatedObjectList, $sliceOffset, $sliceLength);
 
         $this->assertLessThanOrEqual($sliceLength, count($generatedEntitySliceList));
 
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
         $collectionEntitySliceList = $collection->slice($sliceOffset, $sliceLength);
 
         $this->assertLessThanOrEqual($sliceLength, count($collectionEntitySliceList));
@@ -482,12 +465,11 @@ final class ExampleIndexedCollectionTest extends TestCase
 
     public function testPage(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $pageLimit = 2;
-        $pageCount = (int)ceil(count($generatedEntityList) / $pageLimit);
+        $pageCount = (int)ceil(count($generatedObjectList) / $pageLimit);
 
         $totalCollectionItemsCount = 0;
 
@@ -499,12 +481,12 @@ final class ExampleIndexedCollectionTest extends TestCase
             $totalCollectionItemsCount += count($pageItems);
         }
 
-        $this->assertCount($totalCollectionItemsCount, $generatedEntityList);
+        $this->assertCount($totalCollectionItemsCount, $generatedObjectList);
     }
 
     public function testPageCallback(): void
     {
-        $generatedEntityList = $this->generateEntities();
+        $generatedObjectList = $this->generateObjectList();
 
         $id = self::COLLECTION_SIZE + 1;
         $newEntity = (new TestEntity())
@@ -512,14 +494,14 @@ final class ExampleIndexedCollectionTest extends TestCase
             ->setName('Name ' . $id)
             ->setTitle('Title ' . $id);
 
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
         $collection->setPageCallback(
             function (
                 $number,
                 $limit,
                 $preserveKeys,
                 callable $defaultCallback,
-                TestIndexedCollection $that
+                ObjectCollection $that
             ) use (
                 $newEntity
             ) {
@@ -529,10 +511,10 @@ final class ExampleIndexedCollectionTest extends TestCase
             }
         );
 
-        $generatedEntityList[] = $newEntity;
+        $generatedObjectList[] = $newEntity;
 
         $pageLimit = 2;
-        $pageCount = (int)ceil(count($generatedEntityList) / $pageLimit);
+        $pageCount = (int)ceil(count($generatedObjectList) / $pageLimit);
 
         $totalCollectionItemsCount = 0;
 
@@ -544,17 +526,16 @@ final class ExampleIndexedCollectionTest extends TestCase
             $totalCollectionItemsCount += count($pageItems);
         }
 
-        $this->assertCount($totalCollectionItemsCount, $generatedEntityList);
+        $this->assertCount($totalCollectionItemsCount, $generatedObjectList);
     }
 
     public function testPageCount(): void
     {
-        $generatedEntityList = $this->generateEntities();
-
-        $collection = new TestIndexedCollection($generatedEntityList);
+        $generatedObjectList = $this->generateObjectList();
+        $collection = new ObjectCollection(TestEntity::class, $generatedObjectList);
 
         $pageLimit = 2;
-        $pageCount = (int)ceil(count($generatedEntityList) / $pageLimit);
+        $pageCount = (int)ceil(count($generatedObjectList) / $pageLimit);
 
         $collectionPageCount = $collection->pageCount($pageLimit);
 
@@ -565,8 +546,8 @@ final class ExampleIndexedCollectionTest extends TestCase
     {
         $this->expectException(CollectionValidateException::class);
 
-        new TestIndexedCollection([
-            new TestOtherEntity()
+        new ObjectCollection(TestEntity::class, [
+            new TestOtherEntity(),
         ]);
     }
 
@@ -574,8 +555,10 @@ final class ExampleIndexedCollectionTest extends TestCase
     {
         $this->expectException(CollectionValidateException::class);
 
-        new TestIndexedCollection([
-            (object)['test' => 1]
+        new ObjectCollection(TestEntity::class, [
+            new ObjectCollection(TestEntity::class, [
+                (object)['test' => 1],
+            ]),
         ]);
     }
 
@@ -583,14 +566,14 @@ final class ExampleIndexedCollectionTest extends TestCase
     {
         $this->expectException(CollectionValidateException::class);
 
-        (new TestIndexedCollection())->set(0, 1);
+        (new ObjectCollection(TestEntity::class))->set(0, 1);
     }
 
     protected function assertCollection(
-        TestIndexedCollection $collection,
+        ObjectCollection $collection,
         array $entityList = null
     ): void {
-        $entityList = $entityList ?? $this->generateEntities();
+        $entityList = $entityList ?? $this->generateObjectList();
 
         $this->assertCount($collection->count(), $entityList);
 

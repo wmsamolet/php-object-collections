@@ -9,19 +9,10 @@ use Wmsamolet\PhpObjectCollections\AbstractObjectCollection;
  * @method null|TestEntity get(int $key)
  * @method null|TestEntity getByOffset(int $offset)
  */
-class TestIndexedCollection extends AbstractObjectCollection
+class TestEntityCollection extends AbstractObjectCollection
 {
     protected function collectionObjectClassName(): string
     {
         return TestEntity::class;
-    }
-
-    /**
-     * @param int|string|true $key
-     * @param TestEntity $formattedValue
-     */
-    protected function convertKey($key, $formattedValue): int
-    {
-        return $formattedValue->getId();
     }
 }
