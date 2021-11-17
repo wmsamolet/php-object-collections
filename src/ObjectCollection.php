@@ -40,6 +40,46 @@ class ObjectCollection extends AbstractObjectCollection
         parent::__construct($items);
     }
 
+    /**
+     * @return callable|null
+     */
+    public function getConvertKeyCallback(): ?callable
+    {
+        return $this->convertKeyCallback;
+    }
+
+    /**
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function setConvertKeyCallback(?callable $convertKeyCallback)
+    {
+        $this->convertKeyCallback = $convertKeyCallback;
+
+        return $this;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getConvertValueCallback(): ?callable
+    {
+        return $this->convertValueCallback;
+    }
+
+    /**
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function setConvertValueCallback(?callable $convertValueCallback)
+    {
+        $this->convertValueCallback = $convertValueCallback;
+
+        return $this;
+    }
+
     protected function convertKey($key, $formattedValue)
     {
         return $this->convertKeyCallback !== null

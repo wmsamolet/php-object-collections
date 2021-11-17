@@ -1,6 +1,14 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.5.0
+- Added ->getConvertKeyCallback() method for **_Wmsamolet\PhpObjectCollections\ObjectCollection_**
+- Added ->setConvertKeyCallback(...) method for **_Wmsamolet\PhpObjectCollections\ObjectCollection_**
+- Added ->getConvertKeyCallback() method for **_Wmsamolet\PhpObjectCollections\TypedCollection_**
+- Added ->setConvertKeyCallback(...) method for **_Wmsamolet\PhpObjectCollections\TypedCollection_**
+- Added $convertValueCallback __constructor() argument for **_Wmsamolet\PhpObjectCollections\TypedCollection_**
+- Added ::fromIterator(Traversable $iterator) fabric method for **_Wmsamolet\PhpObjectCollections\AbstractCollection_**
+ 
 ### v1.4.0
 - Added collectionKeyType() method for **_Wmsamolet\PhpObjectCollections\AbstractTypedCollection_**
 

@@ -14,22 +14,71 @@ class TypedCollection extends AbstractTypedCollection
      * @var callable|null
      */
     protected $convertKeyCallback;
+    /**
+     * @var callable|null
+     */
+    protected $convertValueCallback;
 
     public function collectionValueType(): string
     {
         return $this->type;
     }
 
-    public function __construct(string $type, array $items = [], callable $convertKeyCallback = null)
-    {
+    public function __construct(
+        string $type,
+        array $items = [],
+        callable $convertKeyCallback = null,
+        callable $convertValueCallback = null
+    ) {
         if (!in_array($type, static::typeList(), true)) {
             throw new CollectionException("Invalid collection items type \"$type\"");
         }
 
         $this->type = $type;
         $this->convertKeyCallback = $convertKeyCallback;
+        $this->convertValueCallback = $convertValueCallback;
 
         parent::__construct($items);
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getConvertKeyCallback(): ?callable
+    {
+        return $this->convertKeyCallback;
+    }
+
+    /**
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function setConvertKeyCallback(?callable $convertKeyCallback)
+    {
+        $this->convertKeyCallback = $convertKeyCallback;
+
+        return $this;
+    }
+
+    /**
+     * @return callable|null
+     */
+    public function getConvertValueCallback(): ?callable
+    {
+        return $this->convertValueCallback;
+    }
+
+    /**
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function setConvertValueCallback(?callable $convertValueCallback)
+    {
+        $this->convertValueCallback = $convertValueCallback;
+
+        return $this;
     }
 
     protected function convertKey($key, $formattedValue)
@@ -37,5 +86,12 @@ class TypedCollection extends AbstractTypedCollection
         return $this->convertKeyCallback !== null
             ? call_user_func($this->convertKeyCallback, $key, $formattedValue)
             : parent::convertKey($key, $formattedValue);
+    }
+
+    protected function convertValue($value)
+    {
+        return $this->convertValueCallback !== null
+            ? call_user_func($this->convertValueCallback, $value)
+            : parent::convertValue($value);
     }
 }

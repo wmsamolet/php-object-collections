@@ -35,6 +35,16 @@ abstract class AbstractCollection implements CollectionInterface
     }
 
     /**
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public static function fromIterator(Traversable $iterator)
+    {
+        return (new static())->setIterator($iterator);
+    }
+
+    /**
      * @inheritdoc
      */
     public function setIterator(Traversable $iterator)
