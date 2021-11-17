@@ -1,6 +1,9 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.4.0
+- Added collectionKeyType() method for **_Wmsamolet\PhpObjectCollections\AbstractTypedCollection_**
+
 ### v1.3.0
 - Improved documentation
 - Improved tests

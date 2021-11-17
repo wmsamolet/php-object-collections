@@ -35,15 +35,33 @@ abstract class AbstractTypedCollection extends AbstractCollection
         return array_combine($typeList, $typeList);
     }
 
+    public function collectionKeyType(): string
+    {
+        return static::TYPE_INTEGER;
+    }
+
     public function validate($value, $key = null, bool $throwException = false): bool
     {
         $valueType = gettype($value);
-        $isValid = $valueType === $this->collectionValueType();
+        $collectionValueType = $this->collectionValueType();
+        $isValid = $valueType === $collectionValueType;
 
         if (!$isValid && $throwException) {
             throw new CollectionException(
-                "Collection item value type must be \"$this->type\" but \"$valueType\" given"
+                "Collection item value type must be \"$collectionValueType\" but \"$valueType\" given"
             );
+        }
+
+        if ($isValid) {
+            $keyType = gettype($key);
+            $collectionKeyType = $this->collectionKeyType();
+            $isValid = $keyType === $collectionKeyType;
+
+            if (!$isValid && $throwException) {
+                throw new CollectionException(
+                    "Collection item key type must be \"$collectionKeyType\" but \"$valueType\" given"
+                );
+            }
         }
 
         return $isValid;
