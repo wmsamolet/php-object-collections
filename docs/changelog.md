@@ -1,6 +1,9 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.5.1
+- Fix ->validate() exceptions
+
 ### v1.5.0
 - Added ->getConvertKeyCallback() method for **_Wmsamolet\PhpObjectCollections\ObjectCollection_**
 - Added ->setConvertKeyCallback(...) method for **_Wmsamolet\PhpObjectCollections\ObjectCollection_**

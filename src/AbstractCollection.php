@@ -13,16 +13,21 @@ use Wmsamolet\PhpObjectCollections\Exceptions\CollectionValidateException;
 
 abstract class AbstractCollection implements CollectionInterface
 {
-    /** @var ArrayIteratorIterator */
+    /**
+     * @var ArrayIteratorIterator
+     */
     private $iterator;
-
-    /** @var null|callable */
+    /**
+     * @var null|callable
+     */
     private $batchCallback;
-
-    /** @var null|callable */
+    /**
+     * @var null|callable
+     */
     private $pageCallback;
-
-    /** @var null|callable */
+    /**
+     * @var null|callable
+     */
     private $countCallback;
 
     public function __construct(array $items = [])
@@ -188,11 +193,19 @@ abstract class AbstractCollection implements CollectionInterface
             $formattedKey = $key;
         }
 
-        if (!$this->validate($formattedValue, $formattedKey)) {
+        try {
+            if (!$this->validate($formattedValue, $formattedKey, true)) {
+                throw new CollectionValidateException(
+                    'Invalid set collection "' . static::class . "\" value with key \"$formattedKey\"",
+                    500,
+                    $convertException ?? null
+                );
+            }
+        } catch (Throwable $validateException) {
             throw new CollectionValidateException(
-                'Invalid set collection "' . static::class . "\" value with key \"$formattedKey\"",
-                500,
-                $convertException ?? null
+                $validateException->getMessage(),
+                $validateException->getCode(),
+                $validateException
             );
         }
 
