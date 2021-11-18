@@ -39,6 +39,16 @@ abstract class AbstractCollection implements CollectionInterface
         }
     }
 
+    public function __clone()
+    {
+        $this->iterator = (new ArrayIteratorIterator(clone $this->iterator->getInnerIterator()))
+            ->setDataArrayIterator(
+                new ArrayIterator(
+                    $this->iterator->getDataArrayIterator()->getArrayCopy()
+                )
+            );
+    }
+
     /**
      * @noinspection PhpMissingReturnTypeInspection
      *
@@ -130,6 +140,14 @@ abstract class AbstractCollection implements CollectionInterface
     public function getPageCallback(): ?callable
     {
         return $this->pageCallback;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function copy()
+    {
+        return clone $this;
     }
 
     /**

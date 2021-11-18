@@ -29,9 +29,29 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
     /** @var \ArrayIterator */
     protected $dataArrayIterator;
 
+    public function getDataArrayIterator(): ArrayIterator
+    {
+        $this->processData();
+
+        return $this->dataArrayIterator;
+    }
+
     /**
-     * @return static
      * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function setDataArrayIterator(ArrayIterator $arrayIterator)
+    {
+        $this->dataArrayIterator = $arrayIterator;
+
+        return $this;
+    }
+
+    /**
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
      */
     public function setKeyGenerator(?callable $keyGenerator)
     {
@@ -64,6 +84,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
     /**
      * @inheritdoc
      * @see ArrayIterator::offsetExists()
+     *
      * @noinspection PhpParameterNameChangedDuringInheritanceInspection
      */
     public function offsetExists($key): bool
@@ -76,6 +97,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
     /**
      * @inheritdoc
      * @see ArrayIterator::offsetGet()
+     *
      * @noinspection PhpParameterNameChangedDuringInheritanceInspection
      */
     public function offsetGet($key)
@@ -88,6 +110,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
     /**
      * @inheritdoc
      * @see ArrayIterator::offsetSet()
+     *
      * @noinspection PhpParameterNameChangedDuringInheritanceInspection
      */
     public function offsetSet($key, $value): void
@@ -99,7 +122,9 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
     }
 
     /**
+     * @inheritdoc
      * @see ArrayIterator::offsetUnset()
+     *
      * @noinspection PhpParameterNameChangedDuringInheritanceInspection
      */
     public function offsetUnset($key): void

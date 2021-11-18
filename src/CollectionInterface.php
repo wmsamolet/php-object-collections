@@ -65,6 +65,15 @@ interface CollectionInterface extends Iterator, ArrayAccess, Countable, Arrayabl
     public function getPageCallback(): ?callable;
 
     /**
+     * Copy (cloning) current collection
+     *
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
+    public function copy();
+
+    /**
      * Verifies conformance of the key and item in the collection
      *
      * @param $value

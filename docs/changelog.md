@@ -1,6 +1,13 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.6.0
+- Fixed a mutability bug when cloning a collection
+- Added __clone() method for **_Wmsamolet\PhpObjectCollections\AbstractCollection_**
+- Added ->copy() method for **_Wmsamolet\PhpObjectCollections\AbstractCollection_**
+- Added ->getDataArrayIterator() method for **_Wmsamolet\PhpObjectCollections\ArrayIteratorIterator_**
+- Added ->setDataArrayIterator(...) method for **_Wmsamolet\PhpObjectCollections\ArrayIteratorIterator_**
+
 ### v1.5.1
 - Fix ->validate() exceptions
 
