@@ -31,7 +31,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
 
     public function getDataArrayIterator(): ArrayIterator
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator;
     }
@@ -44,6 +44,10 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
     public function setDataArrayIterator(ArrayIterator $arrayIterator)
     {
         $this->dataArrayIterator = $arrayIterator;
+
+        $arrayIteratorKeyList = array_keys($arrayIterator->getArrayCopy());
+
+        $this->keyList = array_combine($arrayIteratorKeyList, $arrayIteratorKeyList);
 
         return $this;
     }
@@ -89,7 +93,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function offsetExists($key): bool
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->offsetExists($key);
     }
@@ -102,7 +106,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function offsetGet($key)
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->offsetGet($key);
     }
@@ -115,7 +119,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function offsetSet($key, $value): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->offsetSet($key, $value);
         $this->keyList[$key] = $key;
@@ -129,7 +133,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function offsetUnset($key): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->offsetUnset($key);
 
@@ -141,7 +145,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function getArrayCopy(): array
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->getArrayCopy();
     }
@@ -152,7 +156,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function count(): int
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->count();
     }
@@ -162,7 +166,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function getFlags(): string
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->getFlags();
     }
@@ -172,7 +176,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function setFlags(string $flags): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->setFlags($flags);
     }
@@ -182,7 +186,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function asort(int $flags = SORT_REGULAR): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->asort($flags);
         $this->keyList = array_keys(
@@ -195,7 +199,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function ksort(int $flags = SORT_REGULAR): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->ksort($flags);
         $this->keyList = array_keys(
@@ -209,7 +213,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function uasort(callable $callback): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->uasort($callback);
         $this->keyList = array_keys(
@@ -223,7 +227,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function uksort(callable $callback): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->uksort($callback);
         $this->keyList = array_keys(
@@ -236,7 +240,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function natsort(): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->natsort();
         $this->keyList = array_keys(
@@ -249,7 +253,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function natcasesort(): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->natcasesort();
         $this->keyList = array_keys(
@@ -262,7 +266,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function unserialize(string $data): string
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->unserialize($data);
     }
@@ -272,7 +276,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function serialize(): string
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->serialize();
     }
@@ -283,7 +287,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function rewind(): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->rewind();
     }
@@ -294,7 +298,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function current()
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->current();
     }
@@ -305,14 +309,14 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function key()
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->key();
     }
 
     public function firstKey()
     {
-        $this->processData();
+        $this->loadData();
 
         reset($this->keyList);
 
@@ -321,14 +325,14 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
 
     public function lastKey()
     {
-        $this->processData();
+        $this->loadData();
 
         return end($this->keyList);
     }
 
     public function keyList(): array
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->keyList;
     }
@@ -339,7 +343,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function next(): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->next();
     }
@@ -350,7 +354,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function valid(): bool
     {
-        $this->processData();
+        $this->loadData();
 
         return $this->dataArrayIterator->valid();
     }
@@ -360,19 +364,19 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
      */
     public function seek(int $offset): void
     {
-        $this->processData();
+        $this->loadData();
 
         $this->dataArrayIterator->seek($offset);
     }
 
     /**
-     * Handles (saves) the data of the iterator memory object
+     * @noinspection PhpMissingReturnTypeInspection
      *
-     * @return void
+     * @return static
      */
-    protected function processData(): void
+    public function loadData(bool $reload = false)
     {
-        if ($this->dataArrayIterator === null) {
+        if ($this->dataArrayIterator === null || $reload) {
             $this->dataArrayIterator = new ArrayIterator();
             $this->keyList = [];
 
@@ -403,5 +407,19 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
 
             $this->dataArrayIterator->rewind();
         }
+
+        return $this;
+    }
+
+    /**
+     * @deprecated 2.0.0
+     *
+     * Handles (saves) the data of the iterator memory object
+     *
+     * @return void
+     */
+    protected function processData(): void
+    {
+        $this->loadData();
     }
 }
