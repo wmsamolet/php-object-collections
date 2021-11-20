@@ -161,7 +161,7 @@ abstract class AbstractCollection implements CollectionInterface
     /**
      * @inheritdoc
      */
-    public function offsetKey(int $offset): ?int
+    public function offsetKey(int $offset)
     {
         return $this->iterator->offsetKey($offset);
     }

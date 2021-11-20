@@ -92,7 +92,7 @@ interface CollectionInterface extends Iterator, ArrayAccess, Countable, Arrayabl
     /**
      * Get collection item key by offset
      */
-    public function offsetKey(int $offset): ?int;
+    public function offsetKey(int $offset);
 
     /**
      * Get list all keys

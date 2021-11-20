@@ -80,7 +80,7 @@ class ArrayIteratorIterator extends IteratorIterator implements ArrayAccess, Cou
         return $offset !== false ? $offset : null;
     }
 
-    public function offsetKey(int $offset): ?int
+    public function offsetKey(int $offset)
     {
         return array_values($this->keyList)[$offset] ?? null;
     }

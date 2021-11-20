@@ -1,6 +1,15 @@
 # Changelog:
 [Semantic Versioning](https://semver.org/)
 
+### v1.7.1
+- Improved documentation
+- Fix remove offsetKey(...) return type
+
+### v1.7.0
+- Fix ->setDataArrayIterator() **_Wmsamolet\PhpObjectCollections\ArrayIteratorIterator_**
+- Added ->loadData(...) method for **_Wmsamolet\PhpObjectCollections\ArrayIteratorIterator_**
+- Set ->processData(...) in **_Wmsamolet\PhpObjectCollections\ArrayIteratorIterator_** as deprecated
+
 ### v1.6.0
 - Fixed a mutability bug when cloning a collection
 - Added __clone() method for **_Wmsamolet\PhpObjectCollections\AbstractCollection_**
