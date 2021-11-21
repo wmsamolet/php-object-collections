@@ -18,10 +18,10 @@ class TestIndexedEntityCollection extends AbstractObjectCollection
 
     /**
      * @param int|string|true $key
-     * @param TestEntity $formattedValue
+     * @param TestEntity $convertedValue
      */
-    protected function convertKey($key, $formattedValue): int
+    protected function convertKey($key, $convertedValue): int
     {
-        return $formattedValue->getId();
+        return $convertedValue->getId();
     }
 }

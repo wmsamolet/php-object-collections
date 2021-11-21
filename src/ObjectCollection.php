@@ -80,11 +80,11 @@ class ObjectCollection extends AbstractObjectCollection
         return $this;
     }
 
-    protected function convertKey($key, $formattedValue)
+    protected function convertKey($key, $convertedValue)
     {
         return $this->convertKeyCallback !== null
-            ? call_user_func($this->convertKeyCallback, $key, $formattedValue)
-            : parent::convertKey($key, $formattedValue);
+            ? call_user_func($this->convertKeyCallback, $key, $convertedValue)
+            : parent::convertKey($key, $convertedValue);
     }
 
     protected function convertValue($value)

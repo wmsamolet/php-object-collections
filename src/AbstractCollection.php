@@ -54,6 +54,18 @@ abstract class AbstractCollection implements CollectionInterface
      *
      * @return static
      */
+    public static function fromArray(array $items = [])
+    {
+        return (new static())
+            ->setIterator(new ArrayIterator())
+            ->setList($items);
+    }
+
+    /**
+     * @noinspection PhpMissingReturnTypeInspection
+     *
+     * @return static
+     */
     public static function fromIterator(Traversable $iterator)
     {
         return (new static())->setIterator($iterator);
@@ -198,8 +210,8 @@ abstract class AbstractCollection implements CollectionInterface
         }
 
         try {
-            $formattedValue = $this->convertValue($value);
-            $formattedKey = $this->convertKey($key, $formattedValue);
+            $convertedValue = $this->convertValue($value);
+            $convertedKey = $this->convertKey($key, $convertedValue);
         } catch (Throwable $convertException) {
             $convertException = new CollectionConvertException(
                 $convertException->getMessage(),
@@ -207,14 +219,14 @@ abstract class AbstractCollection implements CollectionInterface
                 $convertException
             );
 
-            $formattedValue = $value;
-            $formattedKey = $key;
+            $convertedValue = $value;
+            $convertedKey = $key;
         }
 
         try {
-            if (!$this->validate($formattedValue, $formattedKey, true)) {
+            if (!$this->validate($convertedValue, $convertedKey, true)) {
                 throw new CollectionValidateException(
-                    'Invalid set collection "' . static::class . "\" value with key \"$formattedKey\"",
+                    'Invalid set collection "' . static::class . "\" value with key \"$convertedKey\"",
                     500,
                     $convertException ?? null
                 );
@@ -231,7 +243,7 @@ abstract class AbstractCollection implements CollectionInterface
             throw $convertException;
         }
 
-        $this->iterator->offsetSet($formattedKey, $formattedValue);
+        $this->iterator->offsetSet($convertedKey, $convertedValue);
 
         return $this;
     }
@@ -676,7 +688,7 @@ abstract class AbstractCollection implements CollectionInterface
      *
      * @return int|string
      */
-    protected function convertKey($key, $formattedValue)
+    protected function convertKey($key, $convertedValue)
     {
         return $key === true ? $this->count() : $key;
     }
